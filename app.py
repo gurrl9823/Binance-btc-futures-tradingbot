@@ -7,10 +7,14 @@ app = Flask(__name__)
 
 client = Client(config.API_KEY, config.API_SECRET, tld='us')
 
-def order(symbol, positionSide, side, quantity, order_type=ORDER_TYPE_MARKET):
+def order(symbol, positionSide, side, order_type=ORDER_TYPE_MARKET):
     try:
         print(f"sending order {order_type} - {symbol} {positionSide} {side} ")
-        order = client.futures_create_order(symbol=symbol, positionSide=positionSide, side=side, type=order_type, quantity=quantity)
+        order = client.futures_create_order(
+            symbol=symbol,              # BTCUSDT
+            positionSide=positionSide,  # LONG, SHORT
+            side=side,                  # BUY, SELL
+            type=order_type)            # MARKET
     except Exception as e:
         print("an exception occured - {}".format(e))
         return False
@@ -34,8 +38,7 @@ def webhook():
 
     side = data['strategy']['order_action'].upper() #BUY, SELL
     positionSide = data['strategy']['market_position'].upper() #LONG, SHORT
-    quantity = 0.04
-    order_response = order("BTCUSDT", positionSide, side, quantity)
+    order_response = order("BTCUSDT", positionSide, side)
 
     if order_response:
         return {
