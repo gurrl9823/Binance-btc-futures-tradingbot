@@ -34,7 +34,7 @@ def webhook():
 
     side = data['strategy']['order_action'].upper() #BUY, SELL
     positionSide = data['strategy']['market_position'].upper() #LONG, SHORT
-    quantity = data['strategy']['order_contracts']
+    quantity = 0.04
     order_response = order("BTCUSDT", side, positionSide, quantity)
 
     if order_response:
