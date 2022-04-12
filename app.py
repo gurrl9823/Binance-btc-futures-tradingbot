@@ -33,7 +33,7 @@ def webhook():
         }
 
     side = data['strategy']['order_action'].upper() #BUY, SELL
-    positionSide = data['strategy']['market_position'].upper() #SHORT, LONG
+    positionSide = data['strategy']['market_position'].upper() #SHORT,LONG
     quantity = data['strategy']['order_contracts']
     order_response = order("BTCUSDT", side, positionSide, quantity)
 
