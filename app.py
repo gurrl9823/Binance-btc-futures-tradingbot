@@ -9,7 +9,7 @@ client = Client(config.API_KEY, config.API_SECRET, tld='us')
 
 def order(symbol, side, positionSide, quantity, order_type=ORDER_TYPE_MARKET):
     try:
-        print(f"sending order {order_type} - {side} {quantity} {symbol}")
+        print(f"sending order {order_type} - {side} {positionSide} {quantity} {symbol}")
         order = client.futures_create_order(symbol=symbol, side=side, positionSide=positionSide, type=order_type, quantity=quantity)
     except Exception as e:
         print("an exception occured - {}".format(e))
@@ -25,7 +25,7 @@ def welcome():
 def webhook():
     #print(request.data)
     data = json.loads(request.data)
-    
+
     if data['passphrase'] != config.WEBHOOK_PASSPHRASE:
         return {
             "code": "error",
