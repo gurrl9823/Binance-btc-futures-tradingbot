@@ -7,10 +7,10 @@ app = Flask(__name__)
 
 client = Client(config.API_KEY, config.API_SECRET, tld='us')
 
-def order(side, quantity, symbol, order_type=ORDER_TYPE_MARKET):
+def order(symbol, side, positionSide, quantity, order_type=ORDER_TYPE_MARKET):
     try:
         print(f"sending order {order_type} - {side} {quantity} {symbol}")
-        order = client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
+        order = client.futures_create_order(symbol=symbol, side=side, positionSide=positionSide, type=order_type, quantity=quantity)
     except Exception as e:
         print("an exception occured - {}".format(e))
         return False
@@ -32,9 +32,10 @@ def webhook():
             "message": "Nice try, invalid passphrase"
         }
 
-    side = data['strategy']['order_action'].upper()
+    side = data['strategy']['order_action'].upper() #BUY, SELL
+    positionSide = data['strategy']['market_position'].upper() #SHORT, LONG
     quantity = data['strategy']['order_contracts']
-    order_response = order(side, quantity, "BTCUSDT")
+    order_response = order("BTCUSDT", side, positionSide, quantity)
 
     if order_response:
         return {
