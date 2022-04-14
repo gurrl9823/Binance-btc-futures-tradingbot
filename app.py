@@ -85,10 +85,20 @@ client = Client(config.API_KEY, config.API_SECRET)
 # request_client = RequestClient(api_key = config.API_KEY, secret_key = config.API_SECRET)
 
 
-def order(side, quantity, symbol, order_type=ORDER_TYPE_MARKET):
+# def order(side, quantity, symbol, order_type=ORDER_TYPE_MARKET):
+#     try:
+#         print(f"sending order {order_type} - {side} {quantity} {symbol}")
+#         order = client.create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
+#     except Exception as e:
+#         print("an exception occured - {}".format(e))
+#         return False
+#
+#     return order
+
+def order(side, positionSide, quantity, symbol, order_type=ORDER_TYPE_MARKET):
     try:
         print(f"sending order {order_type} - {side} {quantity} {symbol}")
-        order = client.create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
+        order = client.futures_create_order(symbol=symbol, side=side, positionSide=positionSide, type=order_type, quantity=quantity)
     except Exception as e:
         print("an exception occured - {}".format(e))
         return False
@@ -113,10 +123,11 @@ def webhook():
         }
 
     side = data['strategy']['order_action'].upper()
+    positionSide = data['strategy']['market_position'].upper() #LONG, SHORT
     # account = request_client.get_account_information()
     # quantity = 99.9 # 22/data['strategy']['order_price'] #data['strategy']['order_contracts']
-    quantity = 100
-    order_response = order(side, quantity, "DOGEUSDT")
+    quantity = 0.002
+    order_response = order(side, positionSide, quantity, "BTCUSDT")
 
     if order_response:
         return {
