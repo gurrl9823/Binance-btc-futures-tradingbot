@@ -98,6 +98,8 @@ client = Client(config.API_KEY, config.API_SECRET)
 def order(side, quantity, symbol, order_type=ORDER_TYPE_MARKET):
     try:
         print(f"sending order {order_type} - {side} {quantity} {symbol}")
+        client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
+        # delay(500)
         order = client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
     except Exception as e:
         print("an exception occured - {}".format(e))
