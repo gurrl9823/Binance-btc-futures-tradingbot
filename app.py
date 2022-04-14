@@ -95,10 +95,10 @@ client = Client(config.API_KEY, config.API_SECRET)
 #
 #     return order
 
-def order(side, positionSide, quantity, symbol, order_type=ORDER_TYPE_MARKET):
+def order(side, quantity, symbol, order_type=ORDER_TYPE_MARKET):
     try:
         print(f"sending order {order_type} - {side} {quantity} {symbol}")
-        order = client.futures_create_order(symbol=symbol, side=side, positionSide=positionSide, type=order_type, quantity=quantity)
+        order = client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
     except Exception as e:
         print("an exception occured - {}".format(e))
         return False
@@ -127,7 +127,7 @@ def webhook():
     # account = request_client.get_account_information()
     # quantity = 99.9 # 22/data['strategy']['order_price'] #data['strategy']['order_contracts']
     quantity = 0.002
-    order_response = order(side, positionSide, quantity, "BTCUSDT")
+    order_response = order(side, quantity, "BTCUSDT")
 
     if order_response:
         return {
