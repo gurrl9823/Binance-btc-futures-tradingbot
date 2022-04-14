@@ -82,6 +82,7 @@ app = Flask(__name__)
 
 # client = Client(config.API_KEY, config.API_SECRET, tld='us')
 client = Client(config.API_KEY, config.API_SECRET)
+# request_client = RequestClient(api_key = config.API_KEY, secret_key = config.API_SECRET)
 
 
 def order(side, quantity, symbol, order_type=ORDER_TYPE_MARKET):
@@ -112,7 +113,8 @@ def webhook():
         }
 
     side = data['strategy']['order_action'].upper()
-    quantity = 23/data['strategy']['order_price'] #data['strategy']['order_contracts']
+    # account = request_client.get_account_information()
+    quantity = 22/data['strategy']['order_price'] #data['strategy']['order_contracts']
     order_response = order(side, quantity, "DOGEUSDT")
 
     if order_response:
