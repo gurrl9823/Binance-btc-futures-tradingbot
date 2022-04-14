@@ -84,10 +84,10 @@ app = Flask(__name__)
 client = Client(config.API_KEY, config.API_SECRET)
 
 
-def order(side, symbol, order_type=ORDER_TYPE_MARKET):
+def order(side, quoteOrderQty, symbol, order_type=ORDER_TYPE_MARKET):
     try:
-        print(f"sending order {order_type} - {side} {symbol}")
-        order = client.create_order(symbol=symbol, side=side, type=order_type)
+        print(f"sending order {order_type} - {side} {quoteOrderQty} {symbol}")
+        order = client.create_order(symbol=symbol, side=side, type=order_type, quoteOrderQty=quoteOrderQty)
     except Exception as e:
         print("an exception occured - {}".format(e))
         return False
@@ -113,8 +113,8 @@ def webhook():
 
     side = data['strategy']['order_action'].upper()
     # quantity = data['strategy']['order_contracts']
-    quantity = "100%"
-    order_response = order(side, "DOGEUSDT")
+    quoteOrderQty = 100
+    order_response = order(side, quoteOrderQty, "DOGEUSDT")
 
     if order_response:
         return {
