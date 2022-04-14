@@ -115,7 +115,7 @@ def webhook():
     side = data['strategy']['order_action'].upper()
     # account = request_client.get_account_information()
     # quantity = 99.9 # 22/data['strategy']['order_price'] #data['strategy']['order_contracts']
-    quoteOrderQty = 99
+    quoteOrderQty = 100
     order_response = order(side, quoteOrderQty, "DOGEUSDT")
 
     if order_response:
