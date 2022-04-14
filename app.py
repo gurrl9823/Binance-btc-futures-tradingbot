@@ -112,7 +112,7 @@ def webhook():
 
     side = data['strategy']['order_action'].upper()
     quantity = data['strategy']['order_contracts']
-    order_response = order(side, quantity, "BTCUSDT")
+    order_response = order(side, quantity, "DOGEUSDT")
 
     if order_response:
         return {
