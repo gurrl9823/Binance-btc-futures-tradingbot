@@ -6,24 +6,6 @@ from binance.enums import *
 app = Flask(__name__)
 
 client = Client(config.API_KEY, config.API_SECRET)
-# request_client = RequestClient(api_key = config.API_KEY, secret_key = config.API_SECRET)
-
-def order(symbol, side, order_type=ORDER_TYPE_MARKET):
-    try:
-        print(f"sending order {order_type} - {side} {quantity} {symbol}")
-        client.futures_cancel_order(symbol=symbol)
-        # client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
-
-        maxWithdrawAmount = float(client.futures_account().maxWithdrawAmount)
-        quantity = maxWithdrawAmount / ['strategy']['order_price']
-
-        order = client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
-    except Exception as e:
-        print("an exception occured - {}".format(e))
-        return False
-
-    return order
-
 
 @app.route('/')
 def welcome():
@@ -42,16 +24,16 @@ def webhook():
         }
 
 
-    symbol = "BTCUSDT",
+    symbol = "BTCUSDT"
 
     client.futures_cancel_order(symbol=symbol)
 
-    side = data['strategy']['order_action'].upper()
+    side = data['strategy']['order_action'].upper() # buy, sell
     maxWithdrawAmount = client.futures_account()['maxWithdrawAmount']
     quantity = maxWithdrawAmount / data['strategy']['order_price']
     order_type = "MARKET"
 
-    print(f"sending order {order_type} - {side} {quantity} {symbol}")
+    print(f"sending order {side} {symbol} {order_type} {quantity} ")
 
     try:
         # client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
