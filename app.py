@@ -2,6 +2,7 @@ import json, config
 from flask import Flask, request, jsonify, render_template
 from binance.client import Client
 from binance.enums import *
+import math
 
 app = Flask(__name__)
 
@@ -30,7 +31,10 @@ def webhook():
 
     side = data['strategy']['order_action'].upper() # buy, sell
     maxWithdrawAmount = float(client.futures_account()['maxWithdrawAmount'])
-    quantity = maxWithdrawAmount / data['strategy']['order_price']
+    leverage = 5
+    print(maxWithdrawAmount)
+    quantity = math.floor(maxWithdrawAmount * leverage / data['strategy']['order_price'] * 1000) / 1000
+    print(quantity)
     order_type = "MARKET"
 
     print(f"sending order {side} {symbol} {order_type} {quantity} ")
