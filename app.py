@@ -29,7 +29,7 @@ def webhook():
     client.futures_cancel_all_open_orders(symbol=symbol)
 
     side = data['strategy']['order_action'].upper() # buy, sell
-    maxWithdrawAmount = client.futures_account()['maxWithdrawAmount']
+    maxWithdrawAmount = float(client.futures_account()['maxWithdrawAmount'])
     quantity = maxWithdrawAmount / data['strategy']['order_price']
     order_type = "MARKET"
 
