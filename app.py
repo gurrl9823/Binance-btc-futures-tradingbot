@@ -8,11 +8,15 @@ app = Flask(__name__)
 client = Client(config.API_KEY, config.API_SECRET)
 # request_client = RequestClient(api_key = config.API_KEY, secret_key = config.API_SECRET)
 
-def order(symbol, side, quantity, order_type=ORDER_TYPE_MARKET):
+def order(symbol, side, order_type=ORDER_TYPE_MARKET):
     try:
         print(f"sending order {order_type} - {side} {quantity} {symbol}")
         client.futures_cancel_order(symbol=symbol)
         # client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
+
+        maxWithdrawAmount = float(client.futures_account().maxWithdrawAmount)
+        quantity = maxWithdrawAmount / ['strategy']['order_price']
+
         order = client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
     except Exception as e:
         print("an exception occured - {}".format(e))
@@ -38,11 +42,24 @@ def webhook():
         }
 
 
+    symbol = "BTCUSDT",
+
+    client.futures_cancel_order(symbol=symbol)
+
     side = data['strategy']['order_action'].upper()
-    maxWithdrawAmount = float(client.futures_account().maxWithdrawAmount)
+    maxWithdrawAmount = client.futures_account()['maxWithdrawAmount']
     quantity = maxWithdrawAmount / ['strategy']['order_price']
-    # quantity = 0.002
-    order_response = order("BTCUSDT", side, quantity)
+    order_type = "MARKET"
+
+    print(f"sending order {order_type} - {side} {quantity} {symbol}")
+
+    try:
+        # client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
+        order_response = client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
+    except Exception as e:
+        print("an exception occured - {}".format(e))
+        return False
+
 
     if order_response:
         return {
