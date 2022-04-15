@@ -62,13 +62,13 @@ def webhook():
 
 
     if order_response:
+        print("order executed")
         return {
             "code": "success",
             "message": "order executed"
         }
     else:
         print("order failed")
-
         return {
             "code": "error",
             "message": "order failed"
