@@ -27,7 +27,7 @@ def webhook():
 
     symbol = "BTCUSDT"
 
-    client.futures_cancel_order(symbol=symbol, orderId=)
+    # client.futures_cancel_order(symbol=symbol, orderId=)
 
     a = client.futures_get_all_orders(symbol=symbol)
     print(a)
