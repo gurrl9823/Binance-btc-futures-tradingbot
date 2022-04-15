@@ -48,7 +48,7 @@ def webhook():
 
     side = data['strategy']['order_action'].upper()
     maxWithdrawAmount = client.futures_account()['maxWithdrawAmount']
-    quantity = maxWithdrawAmount / ['strategy']['order_price']
+    quantity = maxWithdrawAmount / data['strategy']['order_price']
     order_type = "MARKET"
 
     print(f"sending order {order_type} - {side} {quantity} {symbol}")
