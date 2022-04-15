@@ -27,7 +27,10 @@ def webhook():
 
     symbol = "BTCUSDT"
 
-    client.futures_cancel_all_open_orders(symbol=symbol)
+    client.futures_cancel_order(symbol=symbol, orderId=)
+
+    a = client.futures_get_all_orders(symbol=symbol)
+    print(a)
 
     side = data['strategy']['order_action'].upper() # buy, sell
     maxWithdrawAmount = float(client.futures_account()['maxWithdrawAmount'])
