@@ -30,7 +30,7 @@ def webhook():
     # 현재 포지션의 코인 갯수
     a = client.futures_get_all_orders(symbol=symbol)
     executedQty = a[-1]['executedQty']
-
+    print(executedQty)
 
     side = data['strategy']['order_action'].upper() # buy, sell
 
