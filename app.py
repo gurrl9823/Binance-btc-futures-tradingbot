@@ -27,24 +27,32 @@ def webhook():
 
     symbol = "BTCUSDT"
 
+    # 현재 포지션의 코인 갯수
     a = client.futures_get_all_orders(symbol=symbol)
-    orderId = a[-1]['orderId']
-    client.futures_cancel_order(symbol=symbol, orderId=orderId)
+    executedQty = a[-1]['executedQty']
 
 
     side = data['strategy']['order_action'].upper() # buy, sell
-    maxWithdrawAmount = float(client.futures_account()['maxWithdrawAmount'])
-    leverage = 5
-    print(maxWithdrawAmount)
-    quantity = math.floor(maxWithdrawAmount * leverage / data['strategy']['order_price'] * 1000) / 1000
-    print(quantity)
+
     order_type = "MARKET"
 
-    print(f"sending order {side} {symbol} {order_type} {quantity} ")
+
 
     try:
-        # client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
+        # 포지션 정리
+        client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=executedQty)
+
+        # 최대 구매 가능 코인 계산
+        maxWithdrawAmount = float(client.futures_account()['maxWithdrawAmount'])
+        leverage = 5
+        print(maxWithdrawAmount)
+        quantity = math.floor(maxWithdrawAmount * leverage / data['strategy']['order_price'] * 1000) / 1000
+        print(quantity)
+
+        # 포지션 진입
         order_response = client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
+        print(f"sending order {side} {symbol} {order_type} {quantity} ")
+
     except Exception as e:
         print("an exception occured - {}".format(e))
         return False
