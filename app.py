@@ -40,7 +40,7 @@ def webhook():
 
     try:
         # 포지션 정리
-        client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET', closePosition='true')
+        client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET', stopPrice=data['strategy']['order_price'], closePosition='true')
 
         # 최대 구매 가능 코인 계산
         maxWithdrawAmount = float(client.futures_account()['maxWithdrawAmount'])
@@ -50,7 +50,7 @@ def webhook():
         print('구매 가능한 코인 개수 : ', quantity)
 
         # 포지션 진입
-        order_response = client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
+        #order_response = client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
         print(f"sending order {side} {symbol} {order_type} {quantity} ")
 
     except Exception as e:
