@@ -28,9 +28,9 @@ def webhook():
     symbol = "BTCUSDT"
 
     # 현재 포지션의 코인 갯수
-    # a = client.futures_get_all_orders(symbol=symbol)
-    # executedQty = a[-1]['executedQty']
-    # print('현재 포지션의 코인 개수 : ', executedQty)
+    a = client.futures_get_all_orders(symbol=symbol)
+    executedQty = a[-1]['executedQty']
+    print('현재 포지션의 코인 개수 : ', executedQty)
 
     side = data['strategy']['order_action'].upper() # buy, sell
 
@@ -43,9 +43,9 @@ def webhook():
             order_response = client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET', stopPrice=data['strategy']['order_price'], closePosition='true')
             print(f"sending order {side} {symbol} STOP_MARKET")
         # 숏 포지션 정리
-        elif (data['strategy']['order_id'] == 'exit') & (data['strategy']['prev_market_position'] == 'short'):
-            order_response = client.futures_create_order(symbol=symbol, side=side, type='TAKE_PROFIT_MARKET', stopPrice=data['strategy']['order_price'], closePosition='true')
-            print(f"sending order {side} {symbol} TAKE_PROFIT_MARKET")
+        elif (data['strategy']['order_id'] == 'exit') and (data['strategy']['prev_market_position'] == 'short'):
+            order_response = client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET', stopPrice=data['strategy']['order_price']-100, closePosition='true')
+            print(f"sending order {side} {symbol} STOP_MARKET")
         # 포지션 진입
         else:
             # 최대 구매 가능 코인 계산
