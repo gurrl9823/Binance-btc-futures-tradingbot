@@ -28,30 +28,31 @@ def webhook():
     symbol = "BTCUSDT"
 
     # 현재 포지션의 코인 갯수
-    a = client.futures_get_all_orders(symbol=symbol)
-    executedQty = a[-1]['executedQty']
-    print('현재 포지션의 코인 개수 : ', executedQty)
+    # a = client.futures_get_all_orders(symbol=symbol)
+    # executedQty = a[-1]['executedQty']
+    # print('현재 포지션의 코인 개수 : ', executedQty)
 
     side = data['strategy']['order_action'].upper() # buy, sell
 
     order_type = "MARKET"
 
 
-
     try:
         # 포지션 정리
-        order_response = client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET', stopPrice=data['strategy']['order_price'], closePosition='true')
-
-        # 최대 구매 가능 코인 계산
-        maxWithdrawAmount = float(client.futures_account()['maxWithdrawAmount'])
-        leverage = 15
-        print('현재 구매 가능한 달러 : ', maxWithdrawAmount)
-        quantity = math.floor(((maxWithdrawAmount * leverage) / data['strategy']['order_price']) * 1000) / 1000
-        print('구매 가능한 코인 개수 : ', quantity)
-
+        if data['strategy']['order_id'] == 'exit':
+            order_response = client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET', stopPrice=data['strategy']['order_price'], closePosition='true')
+            print(f"sending order {side} {symbol} STOP_MARKET")
         # 포지션 진입
-        #order_response = client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
-        print(f"sending order {side} {symbol} {order_type} {quantity} ")
+        else:
+            # 최대 구매 가능 코인 계산
+            maxWithdrawAmount = float(client.futures_account()['maxWithdrawAmount'])
+            leverage = 15
+            print("현재 구매 가능한 달러 : ", maxWithdrawAmount)
+            quantity = math.floor(((maxWithdrawAmount * leverage) / data['strategy']['order_price']) * 1000) / 1000
+            print("구매 가능한 코인 개수 : ", quantity)
+
+            order_response = client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
+            print(f"sending order {side} {symbol} {order_type} {maxWithdrawAmount*15}$ {quantity} ")
 
     except Exception as e:
         print("an exception occured - {}".format(e))
