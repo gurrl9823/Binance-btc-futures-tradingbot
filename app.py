@@ -28,9 +28,9 @@ def webhook():
     symbol = "BTCUSDT"
 
     # 현재 포지션의 코인 갯수
-    a = client.futures_get_all_orders(symbol=symbol)
-    executedQty = a[-1]['executedQty']
-    print('현재 포지션의 코인 개수 : ', executedQty)
+    # a = client.futures_get_all_orders(symbol=symbol)
+    # executedQty = a[-1]['executedQty']
+    # print('현재 포지션의 코인 개수 : ', executedQty)
 
     side = data['strategy']['order_action'].upper()  # buy, sell
 
@@ -52,7 +52,8 @@ def webhook():
         # 포지션 진입
         else:
             # 최대 구매 가능 코인 계산
-            maxWithdrawAmount = math.floor(float(client.futures_account()['maxWithdrawAmount']) / 100) * 100
+            # maxWithdrawAmount = math.floor(float(client.futures_account()['maxWithdrawAmount']) / 100) * 100
+            maxWithdrawAmount = float(client.futures_account()['maxWithdrawAmount'])
             leverage = 15
             print("현재 구매 가능한 달러 : ", maxWithdrawAmount)
             quantity = math.floor(((maxWithdrawAmount * leverage) / data['strategy']['order_price']) * 1000) / 1000
