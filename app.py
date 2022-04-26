@@ -52,7 +52,7 @@ def webhook():
         # 포지션 진입
         else:
             # 최대 구매 가능 코인 계산
-            maxWithdrawAmount = float(client.futures_account()['maxWithdrawAmount'])
+            maxWithdrawAmount = math.floor(float(client.futures_account()['maxWithdrawAmount']) / 100) * 100
             leverage = 15
             print("현재 구매 가능한 달러 : ", maxWithdrawAmount)
             quantity = math.floor(((maxWithdrawAmount * leverage) / data['strategy']['order_price']) * 1000) / 1000
