@@ -66,7 +66,7 @@ def webhook():
 
     except Exception as e:
         print("an exception occured - {}".format(e))
-        order_response = 'False'
+        order_response = False
 
     if order_response:
         print("order executed")
