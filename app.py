@@ -39,14 +39,16 @@ def webhook():
     try:
         # 롱 포지션 정리
         if (data['strategy']['order_id'] == 'exit') and (data['strategy']['prev_market_position'] == 'long'):
+            # order_response = client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET', stopPrice=data['strategy']['order_price'], closePosition='true')
             order_response = client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET',
-                                                         stopPrice=data['strategy']['order_price'],
+                                                         stopPrice=0,
                                                          closePosition='true')
             print(f"sending order {side} {symbol} STOP_MARKET")
         # 숏 포지션 정리
         elif (data['strategy']['order_id'] == 'exit') and (data['strategy']['prev_market_position'] == 'short'):
+            # order_response = client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET', stopPrice=data['strategy']['order_price'] - 100, closePosition='true')
             order_response = client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET',
-                                                         stopPrice=data['strategy']['order_price'] - 100,
+                                                         stopPrice=0,
                                                          closePosition='true')
             print(f"sending order {side} {symbol} STOP_MARKET")
         # 포지션 진입
