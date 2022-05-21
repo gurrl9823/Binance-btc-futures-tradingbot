@@ -23,13 +23,9 @@ def webhook():
     data = json.loads(request.data)
     print(data['passphrase'])
 
-    if data['passphrase'] == "don't sleep~" :
-        print("don't sleep~")
-        return {
-            "message": "don't sleep~"
-        }
 
-    if (data['passphrase'] != '4h 497d 846%') or (data['passphrase'] != '30m 871d 40%') :
+
+    if (data['passphrase'] != config.WEBHOOK_PASSPHRASE0) or (data['passphrase'] != config.WEBHOOK_PASSPHRASE1) or (data['passphrase'] != config.WEBHOOK_PASSPHRASE2) :
         print("Nice try, invalid passphrase")
         return {
             "code": "error",
@@ -38,7 +34,11 @@ def webhook():
 
 
 
-
+    if data['passphrase'] == "don't sleep~" :
+        print("don't sleep~")
+        return {
+            "message": "don't sleep~"
+        }
 
 
 
