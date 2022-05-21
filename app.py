@@ -21,7 +21,7 @@ def webhook():
     global present_order_id
     # print(request.data)
     data = json.loads(request.data)
-
+    print(data['passphrase'])
     if (data['passphrase'] != "don't sleep~") or (data['passphrase'] != "4h 497d 846%") or (data['passphrase'] != "30m 871d 40%") :
         print("Nice try, invalid passphrase")
         return {
@@ -61,7 +61,7 @@ def webhook():
                 present_order_id = ''
                 order_response = client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET',
                                                              stopPrice=100, closePosition='true')
-                print(f"sending order {side} {symbol} STOP_MARKET")
+                print(f"Close position {data['strategy']['order_id']} {side} {symbol} STOP_MARKET")
             # 포지션 진입
             elif data['strategy']['prev_market_position_size'] == 0:
                 present_order_id = data['strategy']['order_id']
@@ -75,7 +75,7 @@ def webhook():
 
                 order_response = client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
                 client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
-                print(f"sending order {side} {symbol} {order_type} {maxWithdrawAmount * 15}$ {quantity} ")
+                print(f"sending order {data['strategy']['order_id']} {side} {symbol} {order_type} {maxWithdrawAmount * 15}$ {quantity} ")
 
         except Exception as e:
             print("an exception occured - {}".format(e))
