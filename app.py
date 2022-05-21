@@ -38,6 +38,7 @@ def webhook():
 
 
 
+
     if data['passphrase'] == "4h 497d 846%" :
 
         symbol = "BTCUSDT"
