@@ -23,7 +23,7 @@ def webhook():
     data = json.loads(request.data)
     print(data['passphrase'])
 
-    if data['passphrase'] == "dont sleep~" :
+    if data['passphrase'] == "don't sleep~" :
         print("don't sleep~")
         return {
             "don't sleep~"
