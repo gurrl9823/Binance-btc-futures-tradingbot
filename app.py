@@ -22,7 +22,7 @@ def webhook():
     # print(request.data)
     data = json.loads(request.data)
     print(data['passphrase'])
-    if (data['passphrase'] != "don't sleep~") or (data['passphrase'] != "4h 497d 846%") or (data['passphrase'] != "30m 871d 40%") :
+    if (data['passphrase'] != "dont sleep~") or (data['passphrase'] != "4h 497d 846%") or (data['passphrase'] != "30m 871d 40%") :
         print("Nice try, invalid passphrase")
         return {
             "code": "error",
@@ -32,7 +32,7 @@ def webhook():
 
 
 
-    if data['passphrase'] == "don't sleep~" :
+    if data['passphrase'] == "dont sleep~" :
         print("don't sleep~")
         return 0
 
