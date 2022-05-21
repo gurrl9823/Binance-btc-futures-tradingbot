@@ -25,7 +25,9 @@ def webhook():
 
     if data['passphrase'] == "dont sleep~" :
         print("don't sleep~")
-        return 0
+        return {
+            "don't sleep~"
+        }
 
     if (data['passphrase'] != "4h 497d 846%") or (data['passphrase'] != "30m 871d 40%") :
         print("Nice try, invalid passphrase")
