@@ -25,12 +25,12 @@ def webhook():
 
 
 
-    if (data['passphrase'] != config.WEBHOOK_PASSPHRASE0) or (data['passphrase'] != config.WEBHOOK_PASSPHRASE1) or (data['passphrase'] != config.WEBHOOK_PASSPHRASE2) :
-        print("Nice try, invalid passphrase")
-        return {
-            "code": "error",
-            "message": "Nice try, invalid passphrase"
-        }
+    # if (data['passphrase'] != "don't sleep~") or (data['passphrase'] != "4h 497d 846%") or (data['passphrase'] != "30m 871d 40%") :
+    #     print("Nice try, invalid passphrase")
+    #     return {
+    #         "code": "error",
+    #         "message": "Nice try, invalid passphrase"
+    #     }
 
 
 
