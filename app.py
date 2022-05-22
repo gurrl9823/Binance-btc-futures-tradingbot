@@ -77,7 +77,6 @@ def webhook():
                 print("구매 가능한 코인 개수 : ", quantity)
 
                 order_response = client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
-                client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
                 print(f"entry position : {data['strategy']['order_id']} {side} {symbol} {order_type} {maxWithdrawAmount * leverage}$ {quantity} ")
 
         except Exception as e:
