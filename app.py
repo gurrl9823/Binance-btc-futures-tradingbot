@@ -35,7 +35,6 @@ def webhook():
 
 
     if data['passphrase'] == "don't sleep~" :
-        print("don't sleep~")
         return {
             "message": "don't sleep~"
         }
