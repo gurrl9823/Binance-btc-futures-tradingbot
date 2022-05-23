@@ -56,6 +56,7 @@ def webhook():
 
         order_type = "MARKET"
         print(order_type)
+        print(present_order_id)
         try:
             # 포지션 정리
             if ((data['strategy']['order_id'] == '1exit') or (data['strategy']['order_id'] == 'Close entry(s) order 1Long') or (data['strategy']['order_id'] == 'Close entry(s) order 1Short') or (data['strategy']['order_id'] == '1Long') or (data['strategy']['order_id'] == '1Short')) and ((present_order_id == '1Long') or (present_order_id == '1Short')):
