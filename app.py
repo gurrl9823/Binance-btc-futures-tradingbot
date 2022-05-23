@@ -60,6 +60,7 @@ def webhook():
             # 포지션 정리
             if ((data['strategy']['order_id'] == '1exit') or (data['strategy']['order_id'] == 'Close entry(s) order 1Long') or (data['strategy']['order_id'] == 'Close entry(s) order 1Short') or (data['strategy']['order_id'] == '1Long') or (data['strategy']['order_id'] == '1Short')) and ((present_order_id == '1Long') or (present_order_id == '1Short')):
                 present_order_id = ''
+                print(present_order_id)
                 order_response = client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET',
                                                              stopPrice=100, closePosition='true')
                 print(f"Close position : {data['strategy']['order_id']} {side} {symbol} STOP_MARKET")
@@ -67,6 +68,7 @@ def webhook():
             # 포지션 진입
             if (data['strategy']['prev_market_position_size'] == 0) :
                 present_order_id = data['strategy']['order_id']
+                print(present_order_id)
                 # 최대 구매 가능 코인 계산
                 # maxWithdrawAmount = math.floor(float(client.futures_account()['maxWithdrawAmount']) / 100) * 100
                 maxWithdrawAmount = float(client.futures_account()['maxWithdrawAmount']) * 0.99
