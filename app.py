@@ -9,7 +9,7 @@ app = Flask(__name__)
 client = Client(config.API_KEY, config.API_SECRET)
 
 global present_order_id
-present_order_id = ''
+# present_order_id = ''
 
 @app.route('/')
 def welcome():
