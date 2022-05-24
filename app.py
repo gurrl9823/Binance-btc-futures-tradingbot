@@ -61,7 +61,7 @@ def webhook():
 
         order_type = "MARKET"
 
-        stopPrice = int(float(data['strategy']['order_price'])*0.97)
+        stopPrice = int(float(data['strategy']['order_price'])*0.98)
 
         try:
             # 포지션 정리
