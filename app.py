@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 client = Client(config.API_KEY, config.API_SECRET)
 
-global present_order_id
+# global present_order_id
 # present_order_id = ''
 
 @app.route('/')
@@ -18,7 +18,7 @@ def welcome():
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    global present_order_id
+    # global present_order_id
     # print(request.data)
     data = json.loads(request.data)
     print(data['passphrase'])
@@ -52,50 +52,53 @@ def webhook():
         # executedQty = a[-1]['executedQty']
         # print('현재 포지션의 코인 개수 : ', executedQty)
 
+        if data['strategy']['prev_market_position_size'] != 0 :
+            a = client.futures_get_all_orders(symbol=symbol)
+            present_order_id = a[-1]['orderId']
+            print(present_order_id)
+
         side = data['strategy']['order_action'].upper()  # buy, sell
 
         order_type = "MARKET"
-        print(present_order_id)
-        present_order_id = '1Short'
-        print(present_order_id)
-        # try:
-        #     # 포지션 정리
-        #     if ((data['strategy']['order_id'] == '1exit') or (data['strategy']['order_id'] == 'Close entry(s) order 1Long') or (data['strategy']['order_id'] == 'Close entry(s) order 1Short') or (data['strategy']['order_id'] == '1Long') or (data['strategy']['order_id'] == '1Short')) and ((present_order_id == '1Long') or (present_order_id == '1Short')):
-        #         present_order_id = ''
-        #         order_response = client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET',
-        #                                                      stopPrice=100, closePosition='true')
-        #         print(f"Close position : {data['strategy']['order_id']} {side} {symbol} STOP_MARKET")
-        #
-        #     # 포지션 진입
-        #     if (data['strategy']['prev_market_position_size'] == 0) :
-        #         present_order_id = data['strategy']['order_id']
-        #         # 최대 구매 가능 코인 계산
-        #         # maxWithdrawAmount = math.floor(float(client.futures_account()['maxWithdrawAmount']) / 100) * 100
-        #         maxWithdrawAmount = float(client.futures_account()['maxWithdrawAmount']) * 0.99
-        #         leverage = 3
-        #         print("현재 구매 가능한 달러 : ", maxWithdrawAmount)
-        #         quantity = math.floor(((maxWithdrawAmount * leverage) / data['strategy']['order_price']) * 1000) / 1000
-        #         print("구매 가능한 코인 개수 : ", quantity)
-        #
-        #         order_response = client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
-        #         print(f"entry position : {data['strategy']['order_id']} {side} {symbol} {order_type} {maxWithdrawAmount * leverage}$ {quantity} ")
-        #
-        # except Exception as e:
-        #     print("an exception occured - {}".format(e))
-        #     order_response = False
-        #
-        # if order_response:
-        #     print("order executed")
-        #     return {
-        #         "code": "success",
-        #         "message": "order executed"
-        #     }
-        # else:
-        #     print("order failed")
-        #     return {
-        #         "code": "error",
-        #         "message": "order failed"
-        #     }
+
+        try:
+            # 포지션 정리
+            if ((data['strategy']['order_id'] == '1exit') or (data['strategy']['order_id'] == 'Close entry(s) order 1Long') or (data['strategy']['order_id'] == 'Close entry(s) order 1Short')) and (present_order_id == 111):
+
+                order_response = client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET',
+                                                             stopPrice=100, closePosition='true')
+                print(f"Close position : {data['strategy']['order_id']} {side} {symbol} STOP_MARKET")
+            # 포지션 진입
+            elif (data['strategy']['prev_market_position_size'] == 0) or (present_order_id == 111):
+
+                # 최대 구매 가능 코인 계산
+                # maxWithdrawAmount = math.floor(float(client.futures_account()['maxWithdrawAmount']) / 100) * 100
+                maxWithdrawAmount = float(client.futures_account()['maxWithdrawAmount']) * 0.99
+                leverage = 3
+                print("현재 구매 가능한 달러 : ", maxWithdrawAmount)
+                quantity = math.floor(((maxWithdrawAmount * leverage) / data['strategy']['order_price']) * 1000) / 1000
+                print("구매 가능한 코인 개수 : ", quantity)
+
+                order_response = client.futures_create_order(irderId=111, symbol=symbol, side=side, type=order_type, quantity=quantity)
+                client.futures_create_order(irderId=111, symbol=symbol, side=side, type=order_type, quantity=quantity)
+                print(f"entry position : {data['strategy']['order_id']} {side} {symbol} {order_type} {maxWithdrawAmount * leverage}$ {quantity} ")
+
+        except Exception as e:
+            print("an exception occured - {}".format(e))
+            order_response = False
+
+        if order_response:
+            print("order executed")
+            return {
+                "code": "success",
+                "message": "order executed"
+            }
+        else:
+            print("order failed")
+            return {
+                "code": "error",
+                "message": "order failed"
+            }
         return {"message": "order failed"}
 
 
