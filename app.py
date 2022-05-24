@@ -22,9 +22,12 @@ def webhook():
     print(data['passphrase'])
 
     s = client.futures_position_information()
-    b = client.get_recent_trades(symbol='BTCUSDT')
-    print(s)
-    print(b[0]['qty'])
+    for symbolInfo in s:
+        if symbolInfo['symbol'] == 'BTCUSDT':
+            quantity = math.fabs(float(symbolInfo['positionAmt']))
+            break
+
+    print(quantity)
 
     if (data['passphrase'] != "don't sleep~") and (data['passphrase'] != "4h 497d 846%") and (data['passphrase'] != "30m 871d 40%") :
         print("Nice try, invalid passphrase")
