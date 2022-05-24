@@ -63,13 +63,13 @@ def webhook():
 
         try:
             # 포지션 정리
-            if ((data['strategy']['order_id'] == '1exit') or (data['strategy']['order_id'] == 'Close entry(s) order 1Long') or (data['strategy']['order_id'] == 'Close entry(s) order 1Short')) and (present_order_id == '4h 497d 846%'):
+            if ((data['strategy']['order_id'] == '1exit') or (data['strategy']['order_id'] == 'Close entry(s) order 1Long') or (data['strategy']['order_id'] == 'Close entry(s) order 1Short')) and (present_order_id == '4h_497d_846p'):
 
                 order_response = client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET',
                                                              stopPrice=100, closePosition='true')
                 print(f"Close position : {data['strategy']['order_id']} {side} {symbol} STOP_MARKET")
             # 포지션 진입
-            elif (data['strategy']['prev_market_position_size'] == 0) or (present_order_id == '4h 497d 846%'):
+            elif (data['strategy']['prev_market_position_size'] == 0) or (present_order_id == '4h_497d_846p'):
 
                 # 최대 구매 가능 코인 계산
                 # maxWithdrawAmount = math.floor(float(client.futures_account()['maxWithdrawAmount']) / 100) * 100
@@ -79,8 +79,8 @@ def webhook():
                 quantity = math.floor(((maxWithdrawAmount * leverage) / data['strategy']['order_price']) * 1000) / 1000
                 print("구매 가능한 코인 개수 : ", quantity)
 
-                order_response = client.futures_create_order(newClientOrderId='4h 497d 846%', symbol=symbol, side=side, type=order_type, quantity=quantity)
-                client.futures_create_order(newClientOrderId='4h 497d 846%', symbol=symbol, side=side, type=order_type, quantity=quantity)
+                order_response = client.futures_create_order(newClientOrderId='4h_497d_846p', symbol=symbol, side=side, type=order_type, quantity=quantity)
+                client.futures_create_order(newClientOrderId='4h_497d_846p', symbol=symbol, side=side, type=order_type, quantity=quantity)
                 print(f"entry position : {data['strategy']['order_id']} {side} {symbol} {order_type} {maxWithdrawAmount * leverage}$ {quantity} ")
 
         except Exception as e:
