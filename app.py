@@ -1,5 +1,5 @@
 import json, config
-from binance_f import RequestClient
+# from binance_f import RequestClient
 from flask import Flask, request, jsonify, render_template
 from binance.client import Client
 from binance.enums import *
@@ -8,7 +8,7 @@ import math
 app = Flask(__name__)
 
 client = Client(config.API_KEY, config.API_SECRET)
-request_client = RequestClient(api_key=config.API_KEY, secret_key=config.API_SECRET)
+# request_client = RequestClient(api_key=config.API_KEY, secret_key=config.API_SECRET)
 
 @app.route('/')
 def welcome():
@@ -24,6 +24,7 @@ def webhook():
     s = client.futures_position_information()
     b = client.get_recent_trades(symbol='BTCUSDT')
     print(s)
+    print(b[0]['qty'])
 
     if (data['passphrase'] != "don't sleep~") and (data['passphrase'] != "4h 497d 846%") and (data['passphrase'] != "30m 871d 40%") :
         print("Nice try, invalid passphrase")
