@@ -51,7 +51,7 @@ def webhook():
         # a = client.futures_get_all_orders(symbol=symbol)
         # origQty = a[-1]['origQty']
         # print('현재 포지션의 코인 개수 : ', origQty)
-
+        present_order_id = ''
         if data['strategy']['prev_market_position_size'] != 0 :
             a = client.futures_get_all_orders(symbol=symbol)
             present_order_id = a[-1]['clientOrderId']
