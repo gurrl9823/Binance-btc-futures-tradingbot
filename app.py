@@ -1,5 +1,4 @@
 import json, config
-# from binance_f import RequestClient
 from flask import Flask, request, jsonify, render_template
 from binance.client import Client
 from binance.enums import *
@@ -8,7 +7,6 @@ import math
 app = Flask(__name__)
 
 client = Client(config.API_KEY, config.API_SECRET)
-# request_client = RequestClient(api_key=config.API_KEY, secret_key=config.API_SECRET)
 
 @app.route('/')
 def welcome():
@@ -22,9 +20,7 @@ def webhook():
     print(data['passphrase'])
 
 
-
-
-
+    # 예외처리
     if (data['passphrase'] != "don't sleep~") and (data['passphrase'] != "4h 497d 846%") and (data['passphrase'] != "30m 871d 40%") :
         print("Nice try, invalid passphrase")
         return {
@@ -32,21 +28,20 @@ def webhook():
             "message": "Nice try, invalid passphrase"
         }
 
-
-    if data['passphrase'] == "don't sleep~" :
+    # heroku app 활성화 유지
+    if data['passphrase'] == "don't sleep~":
         return {
             "message": "don't sleep~"
         }
 
 
+    # 공통 처리
 
     symbol = "BTCUSDT"
 
     side = data['strategy']['order_action'].upper()  # buy, sell
 
     order_type = "MARKET"
-
-    stopPrice = int(float(data['strategy']['order_price']) * 0.98)
 
     present_order_id = ''
     if data['strategy']['prev_market_position_size'] != 0:
@@ -58,24 +53,12 @@ def webhook():
 
 
 
-
-
-    if data['passphrase'] == "4h 497d 846%" :
-        # 현재 포지션의 코인 갯수
-        # a = client.futures_get_all_orders(symbol=symbol)
-        # origQty = a[-1]['origQty']
-        # print('현재 포지션의 코인 개수 : ', origQty)
+    # strategy 1
+    if data['passphrase'] == "4h 497d 846%":
         try:
             # 포지션 정리
             if ((data['strategy']['order_id'] == '1exit') or (data['strategy']['order_id'] == 'Close entry(s) order 1Long') or (data['strategy']['order_id'] == 'Close entry(s) order 1Short')) and (present_order_id == '4h_497d_846p'):
-
-                # order_response = client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET', stopPrice=stopPrice, closePosition='true')
-                # 현재 포지션의 코인 갯수
-                # a = client.futures_get_all_orders(symbol=symbol)
-                # origQty = a[-1]['origQty']
-                # print('현재 포지션의 코인 개수 : ', origQty)
-                # order_response = client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=origQty)
-
+                # 현재 포지션의 코인 개수
                 position_info = client.futures_position_information()
                 for symbolInfo in position_info:
                     if symbolInfo['symbol'] == 'BTCUSDT':
@@ -87,13 +70,10 @@ def webhook():
                 print(f"Close position : {data['strategy']['order_id']} {side} {symbol} STOP_MARKET")
 
             # 포지션 진입
-            # 무 포지션이어서 진입만 하는 경우
             elif (data['strategy']['prev_market_position_size'] == 0) or ((data['strategy']['prev_market_position_size'] != 0) and (present_order_id == '4h_497d_846p')):
+                # 현재 포지션이 존재하는 경우 == 포지션을 스위치하는 경우 기존 포지션 정리
                 if (present_order_id == '4h_497d_846p'):
-                    # a = client.futures_get_all_orders(symbol=symbol)
-                    # origQty = a[-1]['origQty']
-                    # print('현재 포지션의 코인 개수 : ', origQty)
-                    # client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=origQty)
+                    # 현재 포지션의 코인 개수
                     position_info = client.futures_position_information()
                     for symbolInfo in position_info:
                         if symbolInfo['symbol'] == 'BTCUSDT':
@@ -102,6 +82,7 @@ def webhook():
                     print('현재 포지션의 코인 개수 : ', quantity)
                     client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
 
+                #포지션 진입
                 # 최대 구매 가능 코인 계산
                 maxWithdrawAmount = float(client.futures_account()['maxWithdrawAmount']) * 0.99
                 leverage = 3
@@ -132,13 +113,13 @@ def webhook():
 
 
 
-    if data['passphrase'] == "30m 871d 40%" :
 
+    # strategy 2
+    if data['passphrase'] == "30m 871d 40%":
         try:
             # 포지션 정리
             if (data['strategy']['order_id'] == '2exit') and (present_order_id == '30m_871d_40p'):
-                # order_response = client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET',
-                #                                              stopPrice=1000, closePosition='true')
+                # 현재 포지션의 코인 개수
                 position_info = client.futures_position_information()
                 for symbolInfo in position_info:
                     if symbolInfo['symbol'] == 'BTCUSDT':
@@ -151,7 +132,6 @@ def webhook():
 
             # 포지션 진입
             elif data['strategy']['prev_market_position_size'] == 0:
-                present_order_id = data['strategy']['order_id']
                 # 최대 구매 가능 코인 계산
                 maxWithdrawAmount = float(client.futures_account()['maxWithdrawAmount'])
                 leverage = 3
