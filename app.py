@@ -66,7 +66,7 @@ def webhook():
             if ((data['strategy']['order_id'] == '1exit') or (data['strategy']['order_id'] == 'Close entry(s) order 1Long') or (data['strategy']['order_id'] == 'Close entry(s) order 1Short')) and (present_order_id == '4h_497d_846p'):
 
                 order_response = client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET',
-                                                             stopPrice=1, closePosition='true')
+                                                             stopPrice=1000, closePosition='true')
                 print(f"Close position : {data['strategy']['order_id']} {side} {symbol} STOP_MARKET")
             # 포지션 진입
             elif (data['strategy']['prev_market_position_size'] == 0) or (present_order_id == '4h_497d_846p'):
@@ -99,8 +99,6 @@ def webhook():
                 "code": "error",
                 "message": "order failed"
             }
-        return {"message": "order failed"}
-
 
 
 
@@ -118,7 +116,7 @@ def webhook():
             if (data['strategy']['order_id'] == '2exit') and ((present_order_id == '2Long') or (present_order_id == '2Short')):
                 present_order_id = ''
                 order_response = client.futures_create_order(symbol=symbol, side=side, type='STOP_MARKET',
-                                                             stopPrice=100, closePosition='true')
+                                                             stopPrice=1000, closePosition='true')
                 print(f"Close position : {data['strategy']['order_id']} {side} {symbol} STOP_MARKET")
             # 포지션 진입
             elif data['strategy']['prev_market_position_size'] == 0:
