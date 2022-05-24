@@ -77,7 +77,13 @@ def webhook():
 
             # 포지션 진입
             # 무 포지션이어서 진입만 하는 경우
-            elif (data['strategy']['prev_market_position_size'] == 0):
+            elif (data['strategy']['prev_market_position_size'] == 0) or ((data['strategy']['prev_market_position_size'] != 0) and (present_order_id == '4h_497d_846p')):
+                if (present_order_id == '4h_497d_846p'):
+                    a = client.futures_get_all_orders(symbol=symbol)
+                    origQty = a[-1]['origQty']
+                    print('현재 포지션의 코인 개수 : ', origQty)
+                    client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=origQty)
+
                 # 최대 구매 가능 코인 계산
                 # maxWithdrawAmount = math.floor(float(client.futures_account()['maxWithdrawAmount']) / 100) * 100
                 maxWithdrawAmount = float(client.futures_account()['maxWithdrawAmount']) * 0.99
@@ -90,25 +96,25 @@ def webhook():
                 print(f"entry position : {data['strategy']['order_id']} {side} {symbol} {order_type} {maxWithdrawAmount * leverage}$ {quantity} ")
 
             # 포지션 스위치(팔고 진입)
-            elif (data['strategy']['prev_market_position_size'] != 0) and (present_order_id == '4h_497d_846p'):
-                # 현재 포지션의 코인 갯수
-                a = client.futures_get_all_orders(symbol=symbol)
-                origQty = a[-1]['origQty']
-                print('현재 포지션의 코인 개수 : ', origQty)
-                client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=origQty)
-
-                # 최대 구매 가능 코인 계산
-                # maxWithdrawAmount = math.floor(float(client.futures_account()['maxWithdrawAmount']) / 100) * 100
-                maxWithdrawAmount = float(client.futures_account()['maxWithdrawAmount']) * 0.99
-                leverage = 3
-                print("현재 구매 가능한 달러 : ", maxWithdrawAmount)
-                quantity = math.floor(((maxWithdrawAmount * leverage) / data['strategy']['order_price']) * 1000) / 1000
-                print("구매 가능한 코인 개수 : ", quantity)
-
-                order_response = client.futures_create_order(newClientOrderId='4h_497d_846p', symbol=symbol, side=side,
-                                                             type=order_type, quantity=quantity)
-                print(
-                    f"entry position : {data['strategy']['order_id']} {side} {symbol} {order_type} {maxWithdrawAmount * leverage}$ {quantity} ")
+            # elif (data['strategy']['prev_market_position_size'] != 0) and (present_order_id == '4h_497d_846p'):
+            #     # 현재 포지션의 코인 갯수
+            #     a = client.futures_get_all_orders(symbol=symbol)
+            #     origQty = a[-1]['origQty']
+            #     print('현재 포지션의 코인 개수 : ', origQty)
+            #     client.futures_create_order(symbol=symbol, side=side, type=order_type, quantity=origQty)
+            #
+            #     # 최대 구매 가능 코인 계산
+            #     # maxWithdrawAmount = math.floor(float(client.futures_account()['maxWithdrawAmount']) / 100) * 100
+            #     maxWithdrawAmount = float(client.futures_account()['maxWithdrawAmount']) * 0.99
+            #     leverage = 3
+            #     print("현재 구매 가능한 달러 : ", maxWithdrawAmount)
+            #     quantity = math.floor(((maxWithdrawAmount * leverage) / data['strategy']['order_price']) * 1000) / 1000
+            #     print("구매 가능한 코인 개수 : ", quantity)
+            #
+            #     order_response = client.futures_create_order(newClientOrderId='4h_497d_846p', symbol=symbol, side=side,
+            #                                                  type=order_type, quantity=quantity)
+            #     print(
+            #         f"entry position : {data['strategy']['order_id']} {side} {symbol} {order_type} {maxWithdrawAmount * leverage}$ {quantity} ")
 
         except Exception as e:
             print("an exception occured - {}".format(e))
