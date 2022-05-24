@@ -79,8 +79,8 @@ def webhook():
                 quantity = math.floor(((maxWithdrawAmount * leverage) / data['strategy']['order_price']) * 1000) / 1000
                 print("구매 가능한 코인 개수 : ", quantity)
 
-                order_response = client.futures_create_order(irderId=111, symbol=symbol, side=side, type=order_type, quantity=quantity)
-                client.futures_create_order(irderId=111, symbol=symbol, side=side, type=order_type, quantity=quantity)
+                order_response = client.futures_create_order(orderId=111, symbol=symbol, side=side, type=order_type, quantity=quantity)
+                client.futures_create_order(orderId=111, symbol=symbol, side=side, type=order_type, quantity=quantity)
                 print(f"entry position : {data['strategy']['order_id']} {side} {symbol} {order_type} {maxWithdrawAmount * leverage}$ {quantity} ")
 
         except Exception as e:
