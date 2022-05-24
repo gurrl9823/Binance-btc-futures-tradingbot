@@ -1,5 +1,4 @@
 import json, config
-
 from binance_f import RequestClient
 from flask import Flask, request, jsonify, render_template
 from binance.client import Client
